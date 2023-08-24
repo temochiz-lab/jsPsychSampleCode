@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <link href="https://unpkg.com/jspsych@7.3.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body></body>
+  <script>
+    const jsPsych = initJsPsych();
+
+    // 保存用のファイル名を生成
+    function createfilename(argseed) {
+    // 日付時間秒を文字列で返す	
+        const dt = new Date();
+        var yyyy = dt.getFullYear();
+        var mm = ('00' + (dt.getMonth()+1)).slice(-2);
+        var dd = ('00' + dt.getDate()).slice(-2);
+        var hh = ('00' + dt.getHours()).slice(-2);
+        var mi = ('00' + dt.getMinutes()).slice(-2);
+        var se = ('00' + dt.getSeconds()).slice(-2);
+        var answer = yyyy + mm + dd + "-" + hh + mm + se ;
+        const subject_id = jsPsych.randomization.randomID(10);
+        answer =  argseed + answer + "-" + subject_id +".csv" ;
+    return (answer);
+    }
+    const expname = "datapipeexample-";
+    var filename = createfilename(expname) ;
+
+// 
+    // ランダムな角度を生成
+　　var randomAngle = Math.floor(Math.random() * 361);
+    const hello_trial = {
+        type: jsPsychSurveyText,
+        questions: [
+        {
+//          prompt: '<div>How old are you1?</div>', required: true,
+//          prompt: '<div style="transform: rotate(45deg);">How old are you2?</div>',
+          prompt: '<div style="transform: rotate(' + randomAngle + 'deg);">回転テキスト3</div>'
+        }
+        ],
+        data: {
+            rotation_angle: randomAngle
+        }
+    };
+
+    var survey_question = {
+        type: jsPsychSurveyText,
+        questions: [
+            {prompt: "ファイル名を入力してください。", rows: 1, columns: 50, required: true, name: 'participantID'}
+        ],
+        button_label: '次へ',
+        on_finish: (data) => {
+            filename = JSON.parse(jsPsych.data.responses).participantID ;
+            alert(filename);
+        }
+}
+
+
+    const save_data = {
+        type: jsPsychPipe,
+        action: "save",
+        experiment_id: "RIFUr6lCBTOf",
+        filename: filename,
+        data_string: ()=>jsPsych.data.get().csv()
+    };
+    
+//        jsPsych.run([survey_question]);
+//        jsPsych.run([hello_trial, save_data]);
+        jsPsych.run([hello_trial]);
+</script>
+</html>
