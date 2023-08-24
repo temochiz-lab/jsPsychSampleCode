@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <link href="https://unpkg.com/jspsych@7.3.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body></body>
+  <script>
+    var jsPsych = initJsPsych({
+  on_finish: function() {
+        jsPsych.data.displayData();
+  }
+});
+
+    var trial = {
+        type: jsPsychSurveyText,
+        questions: [
+        {prompt: 'filename'},
+        {prompt: 'yourid  '},
+        ],
+        on_finish: function (data) {
+            var info = data.response.Q0;
+            alert(info) ;
+        },        
+    }
+    jsPsych.run([trial]);
+  </script>
+</html>
