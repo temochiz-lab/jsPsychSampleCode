@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Mode Cookie Setter</title>
+</head>
+
+<body>
+
+<button id="setTestMode">テストモードに設定する</button>
+<button id="resetTestMode">テストモードを解除する</button>
+<br><br>
+<input type="number" id="cookieDuration" placeholder="Enter duration in minutes">
+<button id="setCookieDuration">テストモード有効時間(分)</button>
+
+<script>
+document.getElementById("setTestMode").addEventListener("click", function() {
+    let duration = document.getElementById("cookieDuration").value || 10; // テキストボックスの値、もしくはデフォルトの10分
+    setCookie("testmode", "true", duration);
+    alert(getCookie("testmode"));
+});
+
+document.getElementById("resetTestMode").addEventListener("click", function() {
+    let duration = document.getElementById("cookieDuration").value || 10; // テキストボックスの値、もしくはデフォルトの10分
+    setCookie("testmode", "false", duration);
+    alert(getCookie("testmode"));
+});
+
+document.getElementById("setCookieDuration").addEventListener("click", function() {
+    let duration = document.getElementById("cookieDuration").value || 10;
+    alert(`Cookie duration set to ${duration} minutes.`);
+});
+
+function setCookie(name, value, minutes) {
+    let date = new Date();
+    date.setTime(date.getTime() + (minutes * 60 * 1000)); // ここで分をミリ秒に変換
+    let expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+</script>
+
+</body>
+
+</html>
