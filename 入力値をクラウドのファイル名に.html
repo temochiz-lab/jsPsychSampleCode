@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.2"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <link href="https://unpkg.com/jspsych@7.3.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    学籍番号を入力してください。
+    <input type="text" id="myInput" required>
+    <input type="submit" value="ボタンを押すと実験が始まります。" onclick="startExperiment();">
+  </body>
+  <script>
+
+  function startExperiment() {
+    // myInputが空でないか確認する
+    var inputVal = document.getElementById("myInput").value;
+    if (inputVal) {
+      jsPsych.run([trials]);
+    }
+  }
+
+    // 入力ボックスの要素を取得
+    var inputVal = document.getElementById("myInput").value;
+
+    var jsPsych = initJsPsych({
+      on_finish: function() {
+        jsPsych.data.displayData();
+      }
+    });
+
+    // 実験固有で設定するのは2個所
+    const expname = "temochiz-2023" ; // 【要設定変更1/2】 実験名
+    // クラウド(DataPipe)保存用のファイル名を生成
+    function createfilename(argseed) {
+      // 日付時間秒を文字列で返す	
+      const dt = new Date();
+      var yyyy = dt.getFullYear();
+      var mm = ('00' + (dt.getMonth()+1)).slice(-2);
+      var dd = ('00' + dt.getDate()).slice(-2);
+      var hh = ('00' + dt.getHours()).slice(-2);
+      var mi = ('00' + dt.getMinutes()).slice(-2);
+      var se = ('00' + dt.getSeconds()).slice(-2);
+      var answer = yyyy + mm + dd + "-" + hh + mm + se ;
+      const subject_id = jsPsych.randomization.randomID(10);
+      answer =  argseed + "-" + answer + "-" + subject_id +".csv" ;
+      return (answer);
+    } ;
+    var filename = createfilename(expname + '-ID' + inputVal) ;
+
+    var trials = {
+        timeline: [],
+    };
+
+    // DataPipe保存設定
+    const save_data = {
+    type: jsPsychPipe,
+    action: "save",
+    experiment_id: "RIFUr6lCBTOf", // // 【要設定変更2/2】 DataPipeで表示されるID
+    filename: filename,
+    data_string: ()=>jsPsych.data.get().csv()
+  };
+
+    var trial1 = {
+        type: jsPsychSurveyText,
+        questions: [
+        {prompt: 'filename'},
+        {prompt: 'yourid  '},
+        ],
+    }
+
+
+    trials.timeline.push(trial1) ;
+    trials.timeline.push(save_data) ;
+
+//    jsPsych.run([trials]);
+  </script>
+</html>
