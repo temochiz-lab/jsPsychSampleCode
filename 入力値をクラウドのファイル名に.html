@@ -8,11 +8,23 @@
     <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
     <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
     <link href="https://unpkg.com/jspsych@7.3.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <style>
+        .container {
+          display: grid;
+          place-items: center;     /* 縦横方向のセンタリング */
+          height: 70vh;           /* ビューポートの高さを100%に */
+      }
+    </style>
   </head>
   <body>
-    学籍番号を入力してください。
-    <input type="text" id="myInput" required>
+    <div class="container">
+    <center>
+    <b>これらから実験を始めます。</b><br><br>
+    学籍番号を入力してください。<br><br>
+    <input type="text" id="myInput" required><br><br><br>
     <input type="submit" value="ボタンを押すと実験が始まります。" onclick="startExperiment();">
+    </div>
+    </center>
   </body>
   <script>
 
@@ -65,6 +77,16 @@
     data_string: ()=>jsPsych.data.get().csv()
   };
 
+    // 最初の説明と被検者情報の入力
+    var par_id = {
+      type: jsPsychSurveyText,
+      questions: [
+        {prompt: 'あなたの性別を男性であれば 1、女性であれば 2、答えたくない場合は 3 を入力してください。', columns: 10, required: true, name: 'sex'},
+        {prompt: 'あなたの年齢を入力してください。', columns: 10, required: true, name: 'age'},
+      ],
+      button_label: '次へ',
+    };
+
     var trial1 = {
         type: jsPsychSurveyText,
         questions: [
@@ -74,7 +96,7 @@
     }
 
 
-    trials.timeline.push(trial1) ;
+    trials.timeline.push(par_id) ;
     trials.timeline.push(save_data) ;
 
 //    jsPsych.run([trials]);
