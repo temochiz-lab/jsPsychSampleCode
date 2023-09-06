@@ -22,22 +22,27 @@
     <b>これらから実験を始めます。</b><br><br>
     学籍番号を入力してください。<br><br>
     <input type="text" id="myInput" required><br><br><br>
-    <input type="submit" value="ボタンを押すと実験が始まります。" onclick="startExperiment();">
+    <input type="submit" value="ボタンを押すと実験が始まります。" onclick="pushNext();">
     </div>
     </center>
   </body>
   <script>
 
-  function startExperiment() {
+  var filename ; // OSFのファイル名
+  var inputVal ; // 入力ボックスの要素を取得
+
+  // 入力値をOSFのファイル名にするために、一旦入力、ボタンを押して実験本体に進む
+  function pushNext() {
     // myInputが空でないか確認する
-    var inputVal = document.getElementById("myInput").value;
+    inputVal = document.getElementById("myInput").value;
     if (inputVal) {
-      jsPsych.run([trials]);
+      // ファイル名を生成する
+      startExperiment() ;
     }
   }
 
-    // 入力ボックスの要素を取得
-    var inputVal = document.getElementById("myInput").value;
+  // 実験本体
+  function startExperiment() {
 
     var jsPsych = initJsPsych({
       on_finish: function() {
@@ -62,20 +67,21 @@
       answer =  argseed + "-" + answer + "-" + subject_id +".csv" ;
       return (answer);
     } ;
-    var filename = createfilename(expname + '-ID' + inputVal) ;
 
     var trials = {
         timeline: [],
     };
 
+    filename = createfilename(expname + '-ID' + inputVal) ;
+
     // DataPipe保存設定
     const save_data = {
-    type: jsPsychPipe,
-    action: "save",
-    experiment_id: "RIFUr6lCBTOf", // // 【要設定変更2/2】 DataPipeで表示されるID
-    filename: filename,
-    data_string: ()=>jsPsych.data.get().csv()
-  };
+     type: jsPsychPipe,
+     action: "save",
+     experiment_id: "RIFUr6lCBTOf", // // 【要設定変更2/2】 DataPipeで表示されるID
+     filename: filename,
+     data_string: ()=>jsPsych.data.get().csv()
+    };
 
     // 最初の説明と被検者情報の入力
     var par_id = {
@@ -94,11 +100,11 @@
         {prompt: 'yourid  '},
         ],
     }
-
-
     trials.timeline.push(par_id) ;
     trials.timeline.push(save_data) ;
 
-//    jsPsych.run([trials]);
+    jsPsych.run([trials]);
+
+  }
   </script>
 </html>
