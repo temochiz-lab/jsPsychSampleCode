@@ -14,6 +14,9 @@
   on_finish: function() {
     var  info = jsPsych.data.get().first(1).values()[0].response.Q0 ;
 //    alert("1 finished. answer = " + info) ;
+//    var answerL1 = {correct: true, temo: "chiz"}
+    var answerL1 = jsPsych.data.get() ;
+    jsPsychL2.data.get().push(answerL1);
     if (info == 1)
     	jsPsychL2.run([trial111]);
     else
