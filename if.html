@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <link href="https://unpkg.com/jspsych@7.3.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body></body>
+  <script>
+    var jsPsych = initJsPsych({
+  on_finish: function() {
+    var  info = jsPsych.data.get().first(1).values()[0].response.Q0 ;
+//    alert("1 finished. answer = " + info) ;
+    if (info == 1)
+    	jsPsychL2.run([trial111]);
+    else
+    	jsPsychL2.run([trial112]);
+  }
+});
+    var jsPsychL2 = initJsPsych({
+  on_finish: function() {
+        jsPsychL2.data.displayData();
+            alert("Layer2 finished.") ;
+  }
+});
+
+    var trial1 = {
+        type: jsPsychSurveyText,
+        questions: [
+        {prompt: '1yourid  '},
+        ],
+        }        
+    var trial111 = {
+        type: jsPsychSurveyText,
+        questions: [
+        {prompt: 'selected 1 yourid  '},
+        ],
+        }        
+    var trial112 = {
+        type: jsPsychSurveyText,
+        questions: [
+        {prompt: 'selected 2 yourid  '},
+        ],
+        }        
+
+    jsPsych.run([trial1]);
+  </script>
+</html>
